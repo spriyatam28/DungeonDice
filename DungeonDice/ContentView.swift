@@ -29,6 +29,8 @@ struct ContentView: View {
     }
     
     @State private var resultMessage: String = ""
+    @State private var animationTrigger = false
+    @State private var isDoneAnimating = true
     
     var body: some View {
         VStack {
@@ -43,7 +45,17 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.medium)
                 .multilineTextAlignment(.center)
+                .rotation3DEffect(
+                    isDoneAnimating ? .degrees(360) : .degrees(0),
+                    axis: (x: 1, y: 0, z: 0)
+                )
                 .frame(height: 150)
+                .onChange(of: animationTrigger) {
+                    isDoneAnimating = false
+                    withAnimation(.interpolatingSpring(duration: 0.6, bounce: 0.36)) {
+                        isDoneAnimating = true
+                    }
+                }
             
             Spacer()
             
@@ -51,6 +63,7 @@ struct ContentView: View {
                 ForEach(Dice.allCases) { dice in
                     Button(dice.buttonTitle) {
                         resultMessage = "You Rolled a \(dice.roll()) on a \(dice.buttonTitle) dice!"
+                        animationTrigger.toggle()
                     }
                 }
                 .buttonStyle(.borderedProminent)
