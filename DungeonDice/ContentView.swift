@@ -19,6 +19,10 @@ struct ContentView: View {
         
         var id: Int { rawValue }
         
+        var buttonTitle: String {
+            return "\(self.rawValue)-sided"
+        }
+        
         func roll() -> Int {
             return Int.random(in: 1...self.rawValue)
         }
@@ -45,8 +49,8 @@ struct ContentView: View {
             
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 128))]) {
                 ForEach(Dice.allCases) { dice in
-                    Button("\(dice.rawValue)-sided") {
-                        resultMessage = "You Rolled a \(dice.roll()) on a \(dice.rawValue)-sided dice!"
+                    Button(dice.buttonTitle) {
+                        resultMessage = "You Rolled a \(dice.roll()) on a \(dice.buttonTitle) dice!"
                     }
                 }
                 .buttonStyle(.borderedProminent)
